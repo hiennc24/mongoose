@@ -1,6 +1,6 @@
 {
-  "name": "@hiennc/mongoose",
-  "version": "1.0.9",
+  "name": "@hiennc24/mongoose",
+  "version": "1.0.10",
   "description": "Mongoose",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -22,9 +22,9 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hiennchat/mongoose.git"
+    "url": "git+https://github.com/hiennc24/mongoose.git"
   },
-  "homepage": "https://github.com/hiennchat/mongoose#readme",
+  "homepage": "https://github.com/hiennc24/mongoose#readme",
   "devDependencies": {
     "@types/chai": "^4.2.18",
     "@types/mocha": "^8.2.2",

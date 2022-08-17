@@ -1,4 +1,4 @@
 ## MONGOOSE
 
 ### INSTALL
-npm install @hiennc/mongoose
+npm install @hiennc24/mongoose
