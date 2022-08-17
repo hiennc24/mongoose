@@ -1,7 +1,7 @@
 import { connection, connect, Schema, Mongoose } from 'mongoose';
 import { IMongoConfig, ILogger, ISystemNotify } from './definitions';
 
-export { Schema, FilterQuery, CreateQuery, UpdateQuery, Document } from 'mongoose';
+export { Schema, FilterQuery, UpdateQuery, Document } from 'mongoose';
 export const Mixed = Schema.Types.Mixed;
 
 export class MongoDB {
@@ -31,9 +31,7 @@ export class MongoDB {
   connect(): Promise<Mongoose> {
     return connect(this.config.connectionString, {
       user: this.config.user,
-      pass: this.config.password,
-      useUnifiedTopology: true,
-      useNewUrlParser: true
+      pass: this.config.password
     });
   }
 

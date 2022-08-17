@@ -5,7 +5,6 @@ import {
   Schema,
   Model,
   FilterQuery,
-  CreateQuery,
   UpdateQuery,
   QueryOptions,
   UpdateWithAggregationPipeline,
@@ -58,7 +57,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   async create(entity: Partial<T>): Promise<T> {
     delete (entity as any).id;
 
-    const _entity = await this.model.create(entity as CreateQuery<T & Document>);
+    const _entity = await this.model.create(entity);
     const doc = _entity.toObject();
     return doc;
   }
@@ -68,10 +67,10 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     delete (doc as any).id;
 
     const raw = await this.model.updateOne({ _id: id as any }, doc as UpdateQuery<T & Document>);
-    if (raw.ok === 0) {
+    if (raw.matchedCount === 0) {
       throw new Error('Update failed');
     }
-    return raw.nModified === 0 ? false : true;
+    return raw.modifiedCount === 0 ? false : true;
   }
 
   @Repository()
@@ -83,7 +82,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   @Repository()
   async findMany(cond: Partial<T>): Promise<T[]> {
     const entity = await this.model.find(cond as FilterQuery<T & Document>).lean();
-    return entity as T[];
+    return entity as unknown as T[];
   }
 
   @Repository()
@@ -129,7 +128,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
       limit,
       page,
       totalPages: Math.ceil(count / limit),
-      data: items as T[]
+      data: items as unknown as T[]
     };
   }
 
@@ -137,10 +136,10 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   async deleteById(id: string): Promise<boolean> {
     const raw = await this.model.deleteOne({ _id: id as any });
 
-    if (raw.ok === 0) {
+    if (raw.deletedCount === 0) {
       throw new Error('Delete failed');
     }
-    return raw.n === 0 ? false : true;
+    return raw.deletedCount === 0 ? false : true;
   }
 
   @Repository()
