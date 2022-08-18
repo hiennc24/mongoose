@@ -26,7 +26,7 @@ class UserRepository extends BaseRepository<UserEntity> {
 // main
 const userRepo = new UserRepository();
 const user = userData[0];
-let findUser: UserEntity = null;
+let findUser: UserEntity = null as any;
 
 before((done) => {
   const mongodb = new MongoDB({});
