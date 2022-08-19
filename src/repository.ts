@@ -170,11 +170,11 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  // @Repository()
-  // async aggregate(pipeline: Array<any>, options?: mongodb.AggregateOptions): Promise<T> {
-  //   const entity = await this.model.aggregate(pipeline, options);
-  //   return entity as unknown as T;
-  // }
+  @Repository()
+  async aggregate(pipeline: Array<any>, options?: mongodb.AggregateOptions): Promise<T> {
+    const entity = await this.model.aggregate(pipeline, options);
+    return entity as unknown as T;
+  }
 }
 
 export function Repository(transformInputCondition = true, transformOutputEntities = true) {
