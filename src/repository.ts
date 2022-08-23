@@ -16,7 +16,6 @@ import {
 } from 'mongoose';
 
 import { FindAllOption, FindAllResponse, IBaseRepository, UpdateOptions } from './definitions';
-import mongodb = require('mongodb');
 
 export abstract class BaseRepository<T> implements IBaseRepository<T> {
   model: Model<T & Document>;
@@ -171,8 +170,10 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   }
 
   @Repository()
-  async aggregate(pipeline: Array<any>, options?: mongodb.AggregateOptions): Promise<T> {
-    const entity = await this.model.aggregate(pipeline, options);
+  async aggregate(pipeline: PipelineStage[], callback?: any): Promise<any> {
+    // Convert object pipeline to array
+    const values = Object.values(pipeline);
+    const entity = await this.model.aggregate(values, callback);
     return entity as unknown as T;
   }
 }

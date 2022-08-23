@@ -19,7 +19,7 @@ export interface IBaseRepository<T> {
   findMany(cond: Partial<T>): Promise<T[]>;
   findAll(cond: Partial<T>, option?: Partial<FindAllOption>): Promise<FindAllResponse<T>>;
   updateOne(filter?: any, update?: any, options?: any, callback?: any): Promise<T>;
-  aggregate(pipeline: Array<any>, options?: any): Promise<T>;
+  aggregate(pipeline: any[], callback?: any): Promise<any>;
 }
 
 export interface ILogger {
