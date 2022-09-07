@@ -12,7 +12,8 @@ import {
   Callback,
   ProjectionType,
   PipelineStage,
-  Aggregate
+  Aggregate,
+  PopulateOptions
 } from 'mongoose';
 
 import { FindAllOption, FindAllResponse, IBaseRepository, UpdateOptions } from './definitions';
@@ -170,12 +171,39 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   }
 
   @Repository()
-  async aggregate(pipeline: PipelineStage[], callback?: any): Promise<any> {
+  async aggregate(pipeline: PipelineStage[], callback?: Callback<any>): Promise<any> {
     // Convert object pipeline to array
     const values = Object.values(pipeline);
     const entity = await this.model.aggregate(values, callback);
     return entity as unknown as T;
   }
+
+  @Repository()
+  async populate(
+    docs: Array<any>,
+    options: PopulateOptions | Array<PopulateOptions> | string,
+    callback?: Callback<any>
+  ): Promise<any> {
+    const entity = await this.model.populate(docs, options, callback);
+    return entity as unknown as T;
+  }
+
+  // @Repository()
+  // async findAndPopulate(
+  //   filter: FilterQuery<T>,
+  //   path: string[],
+  //   options?: QueryOptions<T> | null | undefined,
+  //   projection?: ProjectionType<T> | null | undefined,
+  //   select?: string | any,
+  //   model?: string | Model<any>,
+  //   match?: any,
+  //   callback?: Callback<any>
+  // ): Promise<any> {
+  //   const entity = await this.model
+  //     .find(filter, options, projection, callback)
+  //     .populate(path, select, model, match);
+  //   return entity as unknown as T;
+  // }
 }
 
 export function Repository(transformInputCondition = true, transformOutputEntities = true) {
