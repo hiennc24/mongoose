@@ -180,30 +180,31 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
 
   @Repository()
   async populate(
-    docs: Array<any>,
+    doc: Array<any> | any,
     options: PopulateOptions | Array<PopulateOptions> | string,
     callback?: Callback<any>
   ): Promise<any> {
-    const entity = await this.model.populate(docs, options, callback);
+    // console.log(values);
+    const entity = await this.model.populate(doc, options, callback);
     return entity as unknown as T;
   }
 
-  // @Repository()
-  // async findAndPopulate(
-  //   filter: FilterQuery<T>,
-  //   path: string[],
-  //   options?: QueryOptions<T> | null | undefined,
-  //   projection?: ProjectionType<T> | null | undefined,
-  //   select?: string | any,
-  //   model?: string | Model<any>,
-  //   match?: any,
-  //   callback?: Callback<any>
-  // ): Promise<any> {
-  //   const entity = await this.model
-  //     .find(filter, options, projection, callback)
-  //     .populate(path, select, model, match);
-  //   return entity as unknown as T;
-  // }
+  @Repository()
+  async findAndPopulate(
+    filter: FilterQuery<T>,
+    path: string[],
+    options?: QueryOptions<T> | null | undefined,
+    projection?: ProjectionType<T> | null | undefined,
+    select?: string | any,
+    model?: string | Model<any>,
+    match?: any,
+    callback?: Callback<any>
+  ): Promise<any> {
+    const entity = await this.model
+      .find(filter, projection, options, callback)
+      .populate(path, select, model, match);
+    return entity as unknown as T;
+  }
 }
 
 export function Repository(transformInputCondition = true, transformOutputEntities = true) {

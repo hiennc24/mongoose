@@ -20,7 +20,17 @@ export interface IBaseRepository<T> {
   findAll(cond: Partial<T>, option?: Partial<FindAllOption>): Promise<FindAllResponse<T>>;
   updateOne(filter?: any, update?: any, options?: any, callback?: any): Promise<T>;
   aggregate(pipeline: any[], callback?: any): Promise<any>;
-  populate(docs: any, options: any, callback?: any): Promise<any>;
+  populate(doc: any, options: any, callback?: any): Promise<any>;
+  findAndPopulate(
+    filter: any,
+    path: string[] | string,
+    projection?: any,
+    options?: any,
+    select?: string | any,
+    model?: string | any,
+    match?: any,
+    callback?: any
+  ): Promise<any>;
 }
 
 export interface ILogger {
