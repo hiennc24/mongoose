@@ -180,29 +180,27 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
 
   @Repository()
   async populate(
-    doc: Array<any> | any,
+    docs: Array<any> | any,
     options: PopulateOptions | Array<PopulateOptions> | string,
     callback?: Callback<any>
   ): Promise<any> {
-    // console.log(values);
-    const entity = await this.model.populate(doc, options, callback);
-    return entity as unknown as T;
+    if (typeof docs['0'] === 'object') {
+      const values = Object.values(docs);
+      const entity = await this.model.populate(values, options, callback);
+      return entity as unknown as T;
+    } else {
+      const entity = await this.model.populate(docs, options, callback);
+      return entity as unknown as T;
+    }
   }
 
   @Repository()
   async findAndPopulate(
     filter: FilterQuery<T>,
-    path: string[],
-    options?: QueryOptions<T> | null | undefined,
-    projection?: ProjectionType<T> | null | undefined,
-    select?: string | any,
-    model?: string | Model<any>,
-    match?: any,
+    options: PopulateOptions | (PopulateOptions | string)[],
     callback?: Callback<any>
   ): Promise<any> {
-    const entity = await this.model
-      .find(filter, projection, options, callback)
-      .populate(path, select, model, match);
+    const entity = await this.model.find(filter, callback).populate(options);
     return entity as unknown as T;
   }
 }
