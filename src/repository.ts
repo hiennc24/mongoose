@@ -13,8 +13,11 @@ import {
   ProjectionType,
   PipelineStage,
   Aggregate,
-  PopulateOptions
+  PopulateOptions,
+  InsertManyOptions,
+  CallbackWithoutResult
 } from 'mongoose';
+import { isArray } from 'util';
 
 import { FindAllOption, FindAllResponse, IBaseRepository, UpdateOptions } from './definitions';
 
@@ -201,6 +204,27 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     callback?: Callback<any>
   ): Promise<any> {
     const entity = await this.model.find(filter, callback).populate(options);
+    return entity as unknown as T;
+  }
+
+  @Repository()
+  async insertMany(
+    docs: Array<T>,
+    options: InsertManyOptions & { lean: true },
+    callback?: Callback<any>
+  ): Promise<any> {
+    const values = Object.values(docs);
+    const entity = await this.model.insertMany(values, options, callback);
+    return entity as unknown as T;
+  }
+
+  @Repository()
+  async deleteMany(
+    filter?: FilterQuery<T>,
+    options?: QueryOptions<T>,
+    callback?: CallbackWithoutResult
+  ): Promise<any> {
+    const entity = await this.model.deleteMany(filter, options, callback);
     return entity as unknown as T;
   }
 }

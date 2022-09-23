@@ -22,6 +22,8 @@ export interface IBaseRepository<T> {
   aggregate(pipeline: any[], callback?: any): Promise<any>;
   populate(docs: Array<any> | any, options: any, callback?: any): Promise<any>;
   findAndPopulate(filter: any, options: any, callback?: any): Promise<any>;
+  insertMany(docs: Array<T>, options: any, callback?: any): Promise<any>;
+  deleteMany(filter?: any, options?: any, callback?: any): Promise<any>;
 }
 
 export interface ILogger {
