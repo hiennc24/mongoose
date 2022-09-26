@@ -214,8 +214,8 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     callback?: Callback<any>
   ): Promise<any> {
     const values = Object.values(docs);
-    const entity = await this.model.insertMany(values, options, callback);
-    return entity as T;
+    const entity = this.model.insertMany(values, options, callback);
+    return entity as unknown as T;
   }
 
   @Repository()
