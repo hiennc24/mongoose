@@ -209,13 +209,13 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
 
   @Repository()
   async insertMany(
-    docs: Array<T>,
-    options: InsertManyOptions & { lean: true },
+    docs: Array<Partial<T>>,
+    options?: InsertManyOptions & { lean: true },
     callback?: Callback<any>
   ): Promise<any> {
     const values = Object.values(docs);
     const entity = await this.model.insertMany(values, options, callback);
-    return entity as unknown as T;
+    return entity as T;
   }
 
   @Repository()
