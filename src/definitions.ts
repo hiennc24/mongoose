@@ -16,13 +16,13 @@ export interface IBaseRepository<T> {
   find(filter: Partial<T>, projection: any, options?: any, callback?: any): Promise<T>;
   findOne(cond: Partial<T>): Promise<T>;
   findOneAndUpdate(cond: Partial<T>, doc: Partial<T>, options?: UpdateOptions): Promise<T>;
-  findMany(cond: Partial<T>): Promise<T[]>;
   findAll(cond: Partial<T>, option?: Partial<FindAllOption>): Promise<FindAllResponse<T>>;
   updateOne(filter?: any, update?: any, options?: any, callback?: any): Promise<T>;
   aggregate(pipeline: any[], callback?: any): Promise<any>;
   populate(docs: Array<any> | any, options: any, callback?: any): Promise<any>;
   findAndPopulate(filter: any, options: any, callback?: any): Promise<any>;
   insertMany(docs: Array<Partial<T>>, options?: any, callback?: any): Promise<any>;
+  updateMany(filter: any, update?: any, options?: any, callback?: any): Promise<T>;
   deleteMany(filter?: any, options?: any, callback?: any): Promise<any>;
 }
 

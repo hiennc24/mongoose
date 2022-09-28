@@ -17,7 +17,6 @@ import {
   InsertManyOptions,
   CallbackWithoutResult
 } from 'mongoose';
-import { isArray } from 'util';
 
 import { FindAllOption, FindAllResponse, IBaseRepository, UpdateOptions } from './definitions';
 
@@ -80,12 +79,6 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   async findOne(cond: Partial<T>): Promise<T> {
     const entity = await this.model.findOne(cond as FilterQuery<T & Document>).lean();
     return entity as T;
-  }
-
-  @Repository()
-  async findMany(cond: Partial<T>): Promise<T[]> {
-    const entity = await this.model.find(cond as FilterQuery<T & Document>).lean();
-    return entity as unknown as T[];
   }
 
   @Repository()
@@ -187,7 +180,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     options: PopulateOptions | Array<PopulateOptions> | string,
     callback?: Callback<any>
   ): Promise<any> {
-    if (typeof docs['0'] === 'object') {
+    if (Array.isArray(docs)) {
       const values = Object.values(docs);
       const entity = await this.model.populate(values, options, callback);
       return entity as unknown as T;
@@ -225,7 +218,18 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     callback?: CallbackWithoutResult
   ): Promise<any> {
     const entity = await this.model.deleteMany(filter, options, callback);
-    return entity as unknown as T;
+    return entity as T;
+  }
+
+  @Repository()
+  async updateMany(
+    filter?: FilterQuery<T>,
+    update?: UpdateQuery<T> | UpdateWithAggregationPipeline,
+    options?: QueryOptions<T> | null,
+    callback?: Callback
+  ): Promise<T> {
+    const entity = await this.model.updateMany(filter, update, options, callback);
+    return entity as T;
   }
 }
 
