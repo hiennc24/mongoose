@@ -66,7 +66,7 @@ describe('FIND user', () => {
 describe('FIND MANY user', () => {
   it('should be found list of user', (done) => {
     userRepo
-      .findMany({ email: user.email })
+      .find({ email: user.email })
       .then((result) => {
         expect(result).to.be.a('array');
         done();
@@ -106,7 +106,7 @@ describe('FIND ONE AND UPDATE user', () => {
 describe('UPDATE user', () => {
   it('should be found users', (done) => {
     userRepo
-      .findMany({ email: user.email })
+      .find({ email: user.email })
       .then((result) => {
         expect(result).to.be.a('array');
         done();

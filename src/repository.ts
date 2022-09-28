@@ -218,7 +218,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     callback?: CallbackWithoutResult
   ): Promise<any> {
     const entity = await this.model.deleteMany(filter, options, callback);
-    return entity as T;
+    return entity as unknown as T;
   }
 
   @Repository()
@@ -229,7 +229,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     callback?: Callback
   ): Promise<T> {
     const entity = await this.model.updateMany(filter, update, options, callback);
-    return entity as T;
+    return entity as unknown as T;
   }
 }
 
