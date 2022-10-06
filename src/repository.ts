@@ -180,7 +180,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     options: PopulateOptions | Array<PopulateOptions> | string,
     callback?: Callback<any>
   ): Promise<any> {
-    if (Array.isArray(docs)) {
+    if (typeof docs['0'] === 'object') {
       const values = Object.values(docs);
       const entity = await this.model.populate(values, options, callback);
       return entity as unknown as T;
