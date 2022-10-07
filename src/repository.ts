@@ -55,7 +55,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return new mongo.ObjectId().toHexString();
   }
 
-  @Repository(false)
+  @Repository(true, false)
   async create(entity: Partial<T>): Promise<T> {
     delete (entity as any).id;
 
@@ -64,7 +64,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return doc;
   }
 
-  @Repository()
+  @Repository(true, false)
   async updateById(id: string, doc: Partial<T>): Promise<boolean> {
     delete (doc as any).id;
 
@@ -75,13 +75,13 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return raw.modifiedCount === 0 ? false : true;
   }
 
-  @Repository()
+  @Repository(true, false)
   async findOne(cond: Partial<T>): Promise<T> {
     const entity = await this.model.findOne(cond as FilterQuery<T & Document>).lean();
     return entity as T;
   }
 
-  @Repository()
+  @Repository(true, false)
   async findOneAndUpdate(cond: Partial<T>, doc: Partial<T>, options?: UpdateOptions): Promise<T> {
     delete (doc as any).id;
 
@@ -94,7 +94,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as T;
   }
 
-  @Repository()
+  @Repository(true, false)
   async findAll(cond: Partial<T>, option: Partial<FindAllOption>): Promise<FindAllResponse<T>> {
     if (!option) option = {};
     const { fields } = option;
@@ -128,7 +128,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     };
   }
 
-  @Repository()
+  @Repository(true, false)
   async deleteById(id: string): Promise<boolean> {
     const raw = await this.model.deleteOne({ _id: id as any });
 
@@ -138,13 +138,13 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return raw.deletedCount === 0 ? false : true;
   }
 
-  @Repository()
+  @Repository(true, false)
   async count(cond: Partial<T>): Promise<number> {
     const count = await this.model.countDocuments(cond as FilterQuery<T & Document>);
     return count;
   }
 
-  @Repository()
+  @Repository(true, false)
   async updateOne(
     filter?: FilterQuery<T>,
     update?: UpdateQuery<T> | UpdateWithAggregationPipeline,
@@ -155,7 +155,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return raw as unknown as T;
   }
 
-  @Repository()
+  @Repository(true, false)
   async find(
     filter: FilterQuery<T>,
     projection?: ProjectionType<T> | null | undefined,
@@ -166,7 +166,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository()
+  @Repository(true, false)
   async aggregate(pipeline: PipelineStage[], callback?: Callback<any>): Promise<any> {
     // Convert object pipeline to array
     const values = Object.values(pipeline);
@@ -174,7 +174,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository()
+  @Repository(true, false)
   async populate(
     docs: Array<any> | any,
     options: PopulateOptions | Array<PopulateOptions> | string,
@@ -190,7 +190,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     }
   }
 
-  @Repository()
+  @Repository(true, false)
   async findAndPopulate(
     filter: FilterQuery<T>,
     options: PopulateOptions | (PopulateOptions | string)[],
@@ -200,7 +200,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository()
+  @Repository(true, false)
   async insertMany(
     docs: Array<Partial<T>>,
     options?: InsertManyOptions & { lean: true },
@@ -211,7 +211,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository()
+  @Repository(true, false)
   async deleteMany(
     filter?: FilterQuery<T>,
     options?: QueryOptions<T>,
@@ -221,7 +221,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository()
+  @Repository(true, false)
   async updateMany(
     filter?: FilterQuery<T>,
     update?: UpdateQuery<T> | UpdateWithAggregationPipeline,
@@ -233,7 +233,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   }
 }
 
-export function Repository(transformInputCondition = true, transformOutputEntities = true) {
+export function Repository(transformInputCondition?: boolean, transformOutputEntities?: boolean) {
   return (
     _target: unknown,
     _propertyKey: string,
