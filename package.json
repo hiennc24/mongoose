@@ -1,6 +1,6 @@
 {
   "name": "@hiennc24/mongoose",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Mongoose",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
