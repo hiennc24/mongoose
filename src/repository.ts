@@ -55,7 +55,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return new mongo.ObjectId().toHexString();
   }
 
-  @Repository(true, false)
+  @Repository(true, true)
   async create(entity: Partial<T>): Promise<T> {
     delete (entity as any).id;
 
