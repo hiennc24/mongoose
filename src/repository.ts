@@ -55,7 +55,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return new mongo.ObjectId().toHexString();
   }
 
-  @Repository(true, true)
+  @Repository(false)
   async create(entity: Partial<T>): Promise<T> {
     delete (entity as any).id;
 
@@ -64,24 +64,24 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return doc;
   }
 
-  @Repository(true, true)
+  @Repository()
   async updateById(id: string, doc: Partial<T>): Promise<boolean> {
     delete (doc as any).id;
 
-    const raw = await this.model.updateOne({ id: id as any }, doc as UpdateQuery<T & Document>);
+    const raw = await this.model.updateOne({ _id: id as any }, doc as UpdateQuery<T & Document>);
     if (raw.matchedCount === 0) {
       throw new Error('Update failed');
     }
     return raw.modifiedCount === 0 ? false : true;
   }
 
-  @Repository(true, true)
+  @Repository()
   async findOne(cond: Partial<T>): Promise<T> {
     const entity = await this.model.findOne(cond as FilterQuery<T & Document>).lean();
     return entity as T;
   }
 
-  @Repository(true, true)
+  @Repository()
   async findOneAndUpdate(cond: Partial<T>, doc: Partial<T>, options?: UpdateOptions): Promise<T> {
     delete (doc as any).id;
 
@@ -94,7 +94,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as T;
   }
 
-  @Repository(true, true)
+  @Repository()
   async findAll(cond: Partial<T>, option: Partial<FindAllOption>): Promise<FindAllResponse<T>> {
     if (!option) option = {};
     const { fields } = option;
@@ -128,9 +128,9 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     };
   }
 
-  @Repository(true, true)
+  @Repository()
   async deleteById(id: string): Promise<boolean> {
-    const raw = await this.model.deleteOne({ id: id as any });
+    const raw = await this.model.deleteOne({ _id: id as any });
 
     if (raw.deletedCount === 0) {
       throw new Error('Delete failed');
@@ -138,13 +138,13 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return raw.deletedCount === 0 ? false : true;
   }
 
-  @Repository(true, true)
+  @Repository()
   async count(cond: Partial<T>): Promise<number> {
     const count = await this.model.countDocuments(cond as FilterQuery<T & Document>);
     return count;
   }
 
-  @Repository(true, true)
+  @Repository()
   async updateOne(
     filter?: FilterQuery<T>,
     update?: UpdateQuery<T> | UpdateWithAggregationPipeline,
@@ -155,7 +155,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return raw as unknown as T;
   }
 
-  @Repository(true, true)
+  @Repository()
   async find(
     filter: FilterQuery<T>,
     projection?: ProjectionType<T> | null | undefined,
@@ -166,7 +166,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository(true, true)
+  @Repository()
   async aggregate(pipeline: PipelineStage[], callback?: Callback<any>): Promise<any> {
     // Convert object pipeline to array
     const values = Object.values(pipeline);
@@ -174,7 +174,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository(true, true)
+  @Repository()
   async populate(
     docs: Array<any> | any,
     options: PopulateOptions | Array<PopulateOptions> | string,
@@ -190,7 +190,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     }
   }
 
-  @Repository(true, true)
+  @Repository()
   async findAndPopulate(
     filter: FilterQuery<T>,
     options: PopulateOptions | (PopulateOptions | string)[],
@@ -200,18 +200,18 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository(true, true)
+  @Repository()
   async insertMany(
     docs: Array<Partial<T>>,
     options?: InsertManyOptions & { lean: true },
     callback?: Callback<any>
-  ): Promise<T[]> {
+  ): Promise<any> {
     const values = Object.values(docs);
     const entity = this.model.insertMany(values, options, callback);
-    return entity as unknown as T[];
+    return entity as unknown as T;
   }
 
-  @Repository(true, true)
+  @Repository()
   async deleteMany(
     filter?: FilterQuery<T>,
     options?: QueryOptions<T>,
@@ -221,7 +221,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return entity as unknown as T;
   }
 
-  @Repository(true, true)
+  @Repository()
   async updateMany(
     filter?: FilterQuery<T>,
     update?: UpdateQuery<T> | UpdateWithAggregationPipeline,
@@ -233,7 +233,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   }
 }
 
-export function Repository(transformInputCondition?: boolean, transformOutputEntities?: boolean) {
+export function Repository(transformInputCondition = true, transformOutputEntities = true) {
   return (
     _target: unknown,
     _propertyKey: string,
