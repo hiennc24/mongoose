@@ -161,9 +161,9 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     projection?: ProjectionType<T> | null | undefined,
     options?: QueryOptions<T> | null | undefined,
     callback?: Callback<any> | undefined
-  ): Promise<T[]> {
+  ): Promise<T> {
     const entity = await this.model.find(filter, projection, options, callback);
-    return entity as unknown as T[];
+    return entity as unknown as T;
   }
 
   @Repository(true, false)
