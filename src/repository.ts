@@ -273,7 +273,6 @@ function transformEntities(entity: any): void {
     entity.map((item) => {
       if (item?._id) {
         item.id = item._id.toString();
-        delete item._id;
       }
     });
 
@@ -282,7 +281,6 @@ function transformEntities(entity: any): void {
 
   if (entity._id) {
     entity.id = entity._id.toString();
-    delete entity._id;
   }
 }
 
