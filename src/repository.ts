@@ -68,7 +68,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   async updateById(id: string, doc: Partial<T>): Promise<boolean> {
     delete (doc as any).id;
 
-    const raw = await this.model.updateOne({ _id: id as any }, doc as UpdateQuery<T & Document>);
+    const raw = await this.model.updateOne({ id: id as any }, doc as UpdateQuery<T & Document>);
     if (raw.matchedCount === 0) {
       throw new Error('Update failed');
     }
@@ -130,7 +130,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
 
   @Repository(true, false)
   async deleteById(id: string): Promise<boolean> {
-    const raw = await this.model.deleteOne({ _id: id as any });
+    const raw = await this.model.deleteOne({ id: id as any });
 
     if (raw.deletedCount === 0) {
       throw new Error('Delete failed');

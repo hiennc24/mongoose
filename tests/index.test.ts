@@ -41,7 +41,7 @@ describe('CREATE User', () => {
     userRepo
       .create(user)
       .then((result) => {
-        expect(result).has.ownProperty('id');
+        expect(result).has.ownProperty('_id');
         expect(result.email).to.eqls(user.email);
         expect(result.name).to.eqls(user.name);
         done();
@@ -78,7 +78,7 @@ describe('FIND MANY user', () => {
 describe('FIND ALL user', () => {
   it('should be found list or user with paging', (done) => {
     userRepo
-      .findAll({ email: user.email }, { sort: '-id' })
+      .findAll({ email: user.email }, { sort: '-_id' })
       .then((result) => {
         expect(result.limit).to.be.a('number');
         expect(result.page).to.be.a('number');
