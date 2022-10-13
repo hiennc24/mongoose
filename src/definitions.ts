@@ -20,7 +20,7 @@ export interface IBaseRepository<T> {
   updateOne(filter?: any, update?: any, options?: any, callback?: any): Promise<T>;
   aggregate(pipeline: any[], callback?: any): Promise<any>;
   populate(docs: Array<any> | any, options: any, callback?: any): Promise<any>;
-  findAndPopulate(filter: any, options: any, callback?: any): Promise<any>;
+  findAndPopulate(filter: any, options: any, projection?: any, callback?: any): Promise<any>;
   insertMany(docs: Array<Partial<T>>, options?: any, callback?: any): Promise<T[]>;
   updateMany(filter: any, update?: any, options?: any, callback?: any): Promise<T>;
   deleteMany(filter?: any, options?: any, callback?: any): Promise<any>;
