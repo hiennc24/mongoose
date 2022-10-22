@@ -1,3 +1,4 @@
+import { info } from 'console';
 import {
   mongo,
   model,
@@ -15,7 +16,11 @@ import {
   Aggregate,
   PopulateOptions,
   InsertManyOptions,
-  CallbackWithoutResult
+  CallbackWithoutResult,
+  SaveOptions,
+  HydratedDocument,
+  SessionOption,
+  ClientSession
 } from 'mongoose';
 
 import { FindAllOption, FindAllResponse, IBaseRepository, UpdateOptions } from './definitions';
@@ -56,12 +61,12 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   }
 
   @Repository(false)
-  async create(entity: Partial<T>): Promise<T> {
+  async create(entity: Partial<T>, session?: ClientSession): Promise<any> {
     delete (entity as any).id;
-
-    const _entity = await this.model.create(entity);
-    const doc = _entity.toObject();
-    return doc;
+    const _entity = session
+      ? await this.model.create([entity], { session: session })
+      : await this.model.create(entity);
+    return _entity;
   }
 
   @Repository()

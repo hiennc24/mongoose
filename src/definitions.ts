@@ -10,7 +10,7 @@ export type UpdateOptions = {
 };
 
 export interface IBaseRepository<T> {
-  create(entity: Partial<T>): Promise<T>;
+  create(entity: Partial<T>, session?: any): Promise<T>;
   updateById(id: string, doc: Partial<T>): Promise<boolean>;
   deleteById(id: string): Promise<boolean>;
   find(filter: Partial<T>, projection: any, options?: any, callback?: any): Promise<T>;
