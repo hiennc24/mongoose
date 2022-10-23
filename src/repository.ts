@@ -1,4 +1,3 @@
-import { info } from 'console';
 import {
   mongo,
   model,
@@ -17,9 +16,6 @@ import {
   PopulateOptions,
   InsertManyOptions,
   CallbackWithoutResult,
-  SaveOptions,
-  HydratedDocument,
-  SessionOption,
   ClientSession
 } from 'mongoose';
 
@@ -81,21 +77,23 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   }
 
   @Repository()
-  async findOne(cond: Partial<T>): Promise<T> {
-    const entity = await this.model.findOne(cond as FilterQuery<T & Document>).lean();
+  async findOne(
+    cond?: FilterQuery<T>,
+    projection?: ProjectionType<T> | null,
+    options?: QueryOptions<T> | null
+  ): Promise<T> {
+    const entity = await this.model.findOne(cond, projection, options).lean();
     return entity as T;
   }
 
   @Repository()
-  async findOneAndUpdate(cond: Partial<T>, doc: Partial<T>, options?: UpdateOptions): Promise<T> {
+  async findOneAndUpdate(
+    cond?: FilterQuery<T>,
+    doc?: UpdateQuery<T>,
+    options?: QueryOptions<T>
+  ): Promise<T> {
     delete (doc as any).id;
-
-    const entity = await this.model
-      .findOneAndUpdate(cond as FilterQuery<T & Document>, doc as UpdateQuery<T & Document>, {
-        new: true,
-        ...options
-      })
-      .lean();
+    const entity = await this.model.findOneAndUpdate(cond, doc, options).lean();
     return entity as T;
   }
 
