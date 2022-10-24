@@ -16,7 +16,8 @@ import {
   PopulateOptions,
   InsertManyOptions,
   CallbackWithoutResult,
-  ClientSession
+  ClientSession,
+  ReturnsNewDoc
 } from 'mongoose';
 
 import { FindAllOption, FindAllResponse, IBaseRepository, UpdateOptions } from './definitions';
@@ -88,12 +89,16 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
 
   @Repository()
   async findOneAndUpdate(
-    cond?: FilterQuery<T>,
-    doc?: UpdateQuery<T>,
-    options?: QueryOptions<T>
+    cond: FilterQuery<T>,
+    doc: UpdateQuery<T>,
+    options: QueryOptions<T>
   ): Promise<T> {
     delete (doc as any).id;
-    const entity = await this.model.findOneAndUpdate(cond, doc, options).lean();
+
+    const entity = await this.model
+      .findOneAndUpdate(cond, doc, { options, upsert: true, new: true })
+      .lean();
+
     return entity as T;
   }
 
