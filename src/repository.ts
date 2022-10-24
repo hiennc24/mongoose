@@ -63,6 +63,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     const _entity = session
       ? await this.model.create([entity], { session: session })
       : await this.model.create(entity);
+    if (Array.isArray(_entity) && _entity.length === 1) return _entity[0];
     return _entity;
   }
 
