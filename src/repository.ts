@@ -62,9 +62,10 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     delete (entity as any).id;
     const _entity = session
       ? await this.model.create([entity], { session: session })
-      : await this.model.create(entity);
+      : ((await this.model.create(entity)) as any);
     if (Array.isArray(_entity) && _entity.length === 1) return _entity[0];
-    return _entity;
+    const doc = _entity.toObject();
+    return doc;
   }
 
   @Repository()
